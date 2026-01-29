@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class KeyButton extends StatelessWidget {
   final String letter;
   final VoidCallback onTap;
+  final double width;
 
   const KeyButton({
     super.key, 
     required this.letter, 
-    required this.onTap
+    required this.onTap,
+    this.width = 40,
   });
 
   @override
@@ -15,7 +17,7 @@ class KeyButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 40,
+        width: width,
         height: 55,
         alignment: Alignment.center,
         margin: const EdgeInsets.all(4),

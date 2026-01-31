@@ -49,4 +49,8 @@ class WordService {
 
     return _words[index];
   }
+
+  static bool isValidWord(String word) {
+    return _words.contains(word.toUpperCase());
+  }
 }

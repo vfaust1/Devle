@@ -71,6 +71,17 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
       return;
     }
 
+    if (!WordService.isValidWord(currentGuess)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Word not in dictionary!'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
     setState(() {
       guesses.add(currentGuess);
 
@@ -78,6 +89,11 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
         gameStatus = GameStatus.won;
 
         StatsService.saveGameResult(won: true);
+
+        if (widget.forcedWord != null) {
+          StatsService.markDailyPlayed();
+        }
+
         _showEndGameMessage(true);
       }
 
@@ -85,6 +101,10 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
         gameStatus = GameStatus.lost;
 
         StatsService.saveGameResult(won: false);
+
+        if (widget.forcedWord != null) {
+          StatsService.markDailyPlayed();
+        }
         _showEndGameMessage(false);
       }
 

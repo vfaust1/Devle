@@ -4,6 +4,7 @@ class StatsService {
   static const String _keyGamesPlayed = 'games_played';
   static const String _keyGamesWon = 'games_won';
   static const String _keyCurrentStreak = 'current_streak';
+  static const String _keyLastDailyDate = 'last_daily_date';
 
   // Récupérer toutes les stats d'un coup
   static Future<Map<String, int>> getStats() async {
@@ -34,5 +35,21 @@ class StatsService {
       // Si perdu, le streak retombe à 0 !
       await prefs.setInt(_keyCurrentStreak, 0);
     }
+  }
+
+  static Future<bool> hasPlayedDaily() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastDate = prefs.getString(_keyLastDailyDate);
+    
+    final today = DateTime.now().toIso8601String().split('T')[0];
+    
+    return lastDate == today;
+  }
+
+  static Future<void> markDailyPlayed() async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toIso8601String().split('T')[0];
+    
+    await prefs.setString(_keyLastDailyDate, today);
   }
 }

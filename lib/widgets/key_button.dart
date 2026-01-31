@@ -14,6 +14,8 @@ class KeyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -22,14 +24,16 @@ class KeyButton extends StatelessWidget {
         alignment: Alignment.center,
         margin: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          color: isDarkMode ? Colors.transparent : Colors.grey[200],
+          border: Border.all(color: isDarkMode ? Colors.grey : Colors.grey.shade400,),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
           letter.toUpperCase(),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            color: isDarkMode ? Colors.white : Colors.black,
           ),
         ),
       ),

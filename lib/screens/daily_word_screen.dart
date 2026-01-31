@@ -190,7 +190,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
         appBar: AppBar(title: const Text('Daily Word')),
         body: Center(
           child: Container(
-            color: Colors.black,
+            constraints: const BoxConstraints(maxWidth: 600),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

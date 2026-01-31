@@ -22,7 +22,7 @@ class LetterTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         border: backgroundColor == Colors.transparent
-            ? Border.all(color: Colors.grey)
+            ? Border.all(color: Theme.of(context).dividerColor)
             : null,
         borderRadius: BorderRadius.circular(4),
       ),
@@ -31,7 +31,11 @@ class LetterTile extends StatelessWidget {
         style: TextStyle(
           fontSize: size * 0.5,
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: backgroundColor != Colors.transparent
+                ? Colors.white
+                : Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.white 
+                    : Colors.black,
         ),
       ),
     );

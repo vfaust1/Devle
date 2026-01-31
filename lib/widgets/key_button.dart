@@ -22,7 +22,7 @@ class KeyButton extends StatelessWidget {
         width: width,
         height: 55,
         alignment: Alignment.center,
-        margin: const EdgeInsets.all(4),
+        margin: const EdgeInsets.all(1),
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.transparent : Colors.grey[200],
           border: Border.all(color: isDarkMode ? Colors.grey : Colors.grey.shade400,),

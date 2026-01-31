@@ -155,8 +155,12 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     const row3 = "WXCVBNM";
 
     double screenWidth = MediaQuery.of(context).size.width;
+
     double tileSize = (screenWidth - 40) / targetWord.length;
     if (tileSize > 60.0) tileSize = 60.0;
+
+    double keyWidth = (screenWidth - 20) / 10;
+    if (keyWidth > 45.0) keyWidth = 45.0;
 
     return KeyboardListener(
       focusNode: _focusNode,
@@ -228,6 +232,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                   children: row1.split('').map((e) {
                     return KeyButton(
                       letter: e,
+                      width: keyWidth,
                       onTap: () {
                         _onKeyTapped(e);
                       },
@@ -240,8 +245,9 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                   children: row2.split('').map((e) {
                     return KeyButton(
                       letter: e,
+                      width: keyWidth,
                       onTap: () {
-                        _onKeyTapped(e);;
+                        _onKeyTapped(e);
                       },
                     );
                   }).toList(),
@@ -252,19 +258,20 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                   children: [
                     KeyButton(
                       letter: 'ENT',
-                      width: 55,
+                      width: keyWidth * 1.5,
                       onTap: _onEnter,
                     ),
                     
                     ...row3.split('').map((e) {
                       return KeyButton(
                         letter: e,
+                        width: keyWidth,
                         onTap: () => _onKeyTapped(e),
                       );
                     }),
                     KeyButton(
                       letter: 'DEL',
-                      width: 55,
+                      width: keyWidth * 1.5,
                       onTap: _onBackspace,
                     ),
                   ],

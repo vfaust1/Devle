@@ -180,22 +180,84 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          title: Text(won ? 'You Won!' : 'You Lost!'),
-          content: Text(won 
-            ? 'Congratulations! You guessed the word "$targetWord" in ${guesses.length} tries' 
-            : 'The correct word was "$targetWord". Better luck next time!'
+          title: Text(won ? 'You Won!' : 'Game Over!'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min, // Important pour ne pas prendre tout l'écran
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(won
+                  ? 'Congratulations! You found "$targetWord" in ${guesses.length} tries.'
+                  : 'The word was "$targetWord". Better luck next time!'),
+              const SizedBox(height: 20),
+              
+              const Text("Share your score:", style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.copy),
+                  label: const Text("Copy Result to Clipboard"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {
+                    String textToShare = _generateShareText();
+                    
+                    Clipboard.setData(ClipboardData(text: textToShare));
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Score copied! Paste it anywhere.')),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.pop(context);
               },
-              child: const Text('OK'),
+              child: const Text('Menu'),
             ),
-          ]
+             TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Stay here'),
+            ),
+          ],
         );
       }
     );
+  }
+
+  String _generateShareText() {
+    StringBuffer buffer = StringBuffer();
+    
+    buffer.writeln('Devle ${DateTime.now().day}/${DateTime.now().month}');
+    buffer.writeln('${guesses.length}/6');
+    buffer.writeln();
+
+    for (String guess in guesses) {
+      for (int i = 0; i < guess.length; i++) {
+        String letter = guess[i];
+        
+        if (letter == targetWord[i]) {
+          buffer.write('🟩');
+        } else if (targetWord.contains(letter)) {
+          buffer.write('🟨');
+        } else {
+          buffer.write('⬛'); 
+        }
+      }
+      buffer.writeln();
+    }
+
+    return buffer.toString();
   }
 
   @override

@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 import 'services/word_service.dart';
 import 'services/theme_service.dart';
+import 'services/premium_service.dart';
 
-final themeService = ThemeService(); 
+final themeService = ThemeService();
+final premiumService = PremiumService(); 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await WordService.loadDictionary();
   await themeService.loadTheme();
+  await premiumService.loadPremiumStatus();
 
   runApp(const DevleApp());
 }

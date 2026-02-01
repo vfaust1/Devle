@@ -1,3 +1,4 @@
+import 'package:devle/main.dart';
 import 'package:devle/services/word_service.dart';
 import 'package:flutter/material.dart';
 import 'daily_word_screen.dart';
@@ -70,6 +71,17 @@ class _HomeScreenState extends State<HomeScreen> {
             // BOUTON FREE WORD
             ElevatedButton(
                 onPressed: () async {
+                  // Premium = accès illimité
+                  if (premiumService.isPremium) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DailyWordScreen()),
+                    );
+                    return;
+                  }
+
+                  // Non-premium = limite à 3 parties par jour
                   int played = await StatsService.getFreeGamesPlayedToday();
                   const int maxGames = 3;
 

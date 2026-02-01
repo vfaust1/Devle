@@ -1,9 +1,11 @@
 import 'package:devle/services/word_service.dart';
 import 'package:flutter/material.dart';
-import '../widgets/letter_tile.dart';
+// import '../widgets/letter_tile.dart';
 import '../widgets/key_button.dart';
 import 'package:flutter/services.dart';
 import 'package:devle/services/stats_service.dart';
+import '../widgets/shake_widget.dart';
+import '../widgets/flip_letter_tile.dart';
 
 enum GameStatus { playing, won, lost }
 
@@ -24,8 +26,13 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
   List<String> guesses = [];
   
   String targetWord = "";
+  int _revealingIndex = -1;
 
   final FocusNode _focusNode = FocusNode();
+
+  // Une clé unique pour chaque ligne (6 lignes max)
+  final List<GlobalKey<ShakeWidgetState>> _shakeKeys = 
+    List.generate(6, (index) => GlobalKey<ShakeWidgetState>());
 
   @override
   void initState() {
@@ -58,61 +65,72 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     });
   }
 
-  void _onEnter() {
+  Future<void> _onEnter() async {
     if (gameStatus != GameStatus.playing) return;
 
+    // 1. Vérifications (Longueur + Dico)
     if (currentGuess.length < targetWord.length) {
+      _shakeKeys[currentRow].currentState?.shake();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Not enough letters!'),
-          duration: Duration(seconds: 1),
-        ),
+        const SnackBar(content: Text('Not enough letters!'), duration: Duration(seconds: 1)),
       );
       return;
     }
 
     if (!WordService.isValidWord(currentGuess)) {
+      _shakeKeys[currentRow].currentState?.shake();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Word not in dictionary!'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 1),
-        ),
+        const SnackBar(content: Text('Word not in dictionary!'), backgroundColor: Colors.red, duration: Duration(seconds: 1)),
       );
       return;
     }
 
+    // 2. ON LANCE LA SÉQUENCE DE RÉVÉLATION
     setState(() {
       guesses.add(currentGuess);
+      _revealingIndex = -1;
+    });
 
+    // 3. Boucle d'animation
+    for (int i = 0; i < targetWord.length; i++) {
+      await Future.delayed(const Duration(milliseconds: 400)); // 300 ou 500 peut etre
+      setState(() {
+        _revealingIndex = i;
+      });
+    }
+
+    // 4. Une fois l'animation finie, on vérifie la victoire/défaite
+    await Future.delayed(const Duration(milliseconds: 200));
+
+    setState(() {
+      _revealingIndex = -1;
+
+      // Vérification victoire/défaite
       if (currentGuess == targetWord) {
         gameStatus = GameStatus.won;
-
         StatsService.saveGameResult(won: true);
-
         if (widget.forcedWord != null) {
           StatsService.markDailyPlayed();
+        } else {
+          StatsService.incrementFreeGame();
         }
-
         _showEndGameMessage(true);
-      }
-
+      } 
       else if (guesses.length >= 6) {
         gameStatus = GameStatus.lost;
-
         StatsService.saveGameResult(won: false);
-
         if (widget.forcedWord != null) {
           StatsService.markDailyPlayed();
+        } else {
+          StatsService.incrementFreeGame();
         }
         _showEndGameMessage(false);
-      }
-
+      } 
+      // Préparation du prochain essai
       else {
-        currentRow ++;
+        currentRow++;
         currentGuess = "";
       }
-
     });
   }
 
@@ -123,15 +141,27 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
   }
 
   Color _getTileColor(int rowIndex, int letterIndex) {
-    if (rowIndex >= currentRow) {
+    // 1. Ligne future = transparente
+    if (rowIndex > currentRow) {
       return Colors.transparent;
     }
+
+    // 2. Ligne actuelle
+    if (rowIndex == currentRow) {
+      if (rowIndex >= guesses.length) {
+        return Colors.transparent;
+      }
+      
+      if (letterIndex > _revealingIndex) {
+        return Colors.transparent;
+      }
+    }
+
+    // 3. Calcul de la couleur 
+    if (rowIndex >= guesses.length) return Colors.transparent;
 
     String guess = guesses[rowIndex];
-
-    if (letterIndex >= guess.length) {
-      return Colors.transparent;
-    }
+    if (letterIndex >= guess.length) return Colors.transparent;
 
     String letter = guess[letterIndex];
 
@@ -140,7 +170,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     } else if (targetWord.contains(letter)) {
       return Colors.amber;
     } else {
-      return Colors.grey.shade800;
+      return Colors.grey.shade800; 
     }
   }
 
@@ -221,28 +251,31 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                 ...List.generate(6, (rowIndex) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(targetWord.length, (letterIndex) {
-                        String letterToShow = "";
+                    child: ShakeWidget(
+                      key: _shakeKeys[rowIndex],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(targetWord.length, (letterIndex) {
+                          String letterToShow = "";
 
-                        if (rowIndex < currentRow) {
-                          letterToShow = guesses[rowIndex][letterIndex];
-                        } 
-                        else if (rowIndex == currentRow) {
-                          if (letterIndex < currentGuess.length) {
-                            letterToShow = currentGuess[letterIndex];
-                          }
-                        } 
+                          if (rowIndex < currentRow) {
+                            letterToShow = guesses[rowIndex][letterIndex];
+                          } 
+                          else if (rowIndex == currentRow) {
+                            if (letterIndex < currentGuess.length) {
+                              letterToShow = currentGuess[letterIndex];
+                            }
+                          } 
 
-                        Color tileColor = _getTileColor(rowIndex, letterIndex);
+                          Color tileColor = _getTileColor(rowIndex, letterIndex);
 
-                        return LetterTile(
-                          letter: letterToShow, 
-                          backgroundColor: tileColor,
-                          size: tileSize,
-                        );
-                      }),
+                          return FlipLetterTile(
+                            letter: letterToShow, 
+                            backgroundColor: tileColor,
+                            size: tileSize,
+                          );
+                        }),
+                      ),
                     ),
                   );
                 }),

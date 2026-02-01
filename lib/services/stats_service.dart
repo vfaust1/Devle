@@ -5,6 +5,8 @@ class StatsService {
   static const String _keyGamesWon = 'games_won';
   static const String _keyCurrentStreak = 'current_streak';
   static const String _keyLastDailyDate = 'last_daily_date';
+  static const String _keyLastFreeDate = 'last_free_date';
+  static const String _keyFreeCount = 'free_count_today';
 
   // Récupérer toutes les stats d'un coup
   static Future<Map<String, int>> getStats() async {
@@ -51,5 +53,27 @@ class StatsService {
     final today = DateTime.now().toIso8601String().split('T')[0];
     
     await prefs.setString(_keyLastDailyDate, today);
+  }
+
+  static Future<int> getFreeGamesPlayedToday() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lastDate = prefs.getString(_keyLastFreeDate);
+    final today = DateTime.now().toIso8601String().split('T')[0];
+
+    if (lastDate != today) {
+      return 0; 
+    }
+
+    return prefs.getInt(_keyFreeCount) ?? 0;
+  }
+
+  static Future<void> incrementFreeGame() async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = DateTime.now().toIso8601String().split('T')[0];
+    
+    int currentCount = await getFreeGamesPlayedToday();
+    
+    await prefs.setString(_keyLastFreeDate, today);
+    await prefs.setInt(_keyFreeCount, currentCount + 1);
   }
 }

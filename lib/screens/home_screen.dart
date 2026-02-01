@@ -69,12 +69,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
             // BOUTON FREE WORD
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DailyWordScreen()),
-                  );
+                onPressed: () async {
+                  int played = await StatsService.getFreeGamesPlayedToday();
+                  const int maxGames = 3;
+
+                  if (played >= maxGames) {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Limit Reached 🛑"),
+                          content: const Text(
+                              "You have played your 3 free games for today.\n\nCome back tomorrow!"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("OK"),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const DailyWordScreen()),
+                      );
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),

@@ -3,6 +3,7 @@ import 'screens/home_screen.dart';
 import 'services/word_service.dart';
 import 'services/theme_service.dart';
 import 'services/premium_service.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 final themeService = ThemeService();
 final premiumService = PremiumService(); 
@@ -13,6 +14,8 @@ void main() async {
   await WordService.loadDictionary();
   await themeService.loadTheme();
   await premiumService.loadPremiumStatus();
+
+  MobileAds.instance.initialize();
 
   runApp(const DevleApp());
 }

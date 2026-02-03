@@ -76,4 +76,13 @@ class StatsService {
     await prefs.setString(_keyLastFreeDate, today);
     await prefs.setInt(_keyFreeCount, currentCount + 1);
   }
+
+  static Future<void> rewardExtraGame() async {
+    final prefs = await SharedPreferences.getInstance();
+    int currentCount = await getFreeGamesPlayedToday();
+    
+    if (currentCount > 0) {
+      await prefs.setInt(_keyFreeCount, currentCount - 1);
+    }
+  }
 }

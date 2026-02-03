@@ -5,11 +5,18 @@ A Wordle-inspired word guessing game built with Flutter, featuring programming-r
 ## ✨ Features
 
 - **Daily Word Challenge**: One word per day, synchronized for all players
-- **Free Play Mode**: Unlimited games with random programming terms
+- **Free Play Mode**: Random programming terms (3 games/day for free users, unlimited for premium)
+- **Premium System**: Unlock unlimited games and support development
+- **Animated Gameplay**:
+  - 🎬 Smooth tile flip animation on letter reveal
+  - 📳 Shake effect for invalid input
+  - ⏱️ Sequential tile reveal (400ms delay)
 - **Smart Feedback System**:
   - 🟩 Green: Letter is correct and in the right position
   - 🟨 Yellow: Letter exists but in the wrong position
   - ⬛ Grey: Letter is not in the word
+- **Share Results**: Copy your score grid to clipboard with emoji tiles
+- **Dictionary Validation**: Only valid words from the dictionary are accepted
 - **Statistics Tracking**: Monitor your wins, win rate, and current streak
 - **Theme Toggle**: Switch between dark and light modes
 - **Responsive Design**: Optimized for web, mobile, and desktop platforms
@@ -72,13 +79,14 @@ flutter build ios --release
 ## 🎯 How to Play
 
 1. **Choose Your Mode**:
-   - Daily Word: Play today's challenge
-   - Free Word: Practice with unlimited random words
+   - Daily Word: Play today's challenge (once per day)
+   - Free Word: Practice with random words (3 free games/day, unlimited for premium)
 
 2. **Make a Guess**:
-   - Enter a 5/6-letter programming term
+   - Enter a 5/6-letter programming term (must be in dictionary)
    - Press ENTER to submit
    - Use DEL to delete letters
+   - Watch the smooth flip animation reveal your results!
 
 3. **Read the Feedback**:
    - Green tiles indicate correct letters in correct positions
@@ -88,6 +96,12 @@ flutter build ios --release
 4. **Win the Game**:
    - You have 6 attempts to guess the word
    - Track your progress in the Statistics screen
+   - Share your results with the copy button!
+
+5. **Go Premium** (Optional):
+   - Unlock unlimited Free Word games
+   - Support the developer
+   - Access available in Settings
 
 ## 📁 Project Structure
 
@@ -100,12 +114,15 @@ lib/
 │   ├── stats_screen.dart     # Statistics display
 │   └── settings_screen.dart  # Theme & settings
 ├── widgets/
+│   ├── flip_letter_tile.dart # Animated letter tile with flip effect
+│   ├── shake_widget.dart     # Shake animation for errors
 │   ├── letter_tile.dart      # Individual letter display
 │   └── key_button.dart       # Keyboard button
 └── services/
     ├── word_service.dart     # Dictionary management
     ├── stats_service.dart    # Statistics persistence
-    └── theme_service.dart    # Theme management
+    ├── theme_service.dart    # Theme management
+    └── premium_service.dart  # Premium status management
 ```
 
 ## 🛠️ Technologies

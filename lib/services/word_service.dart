@@ -11,11 +11,11 @@ class WordService {
     try {
       // 1. On lit le fichier brut en une seule longue chaine
       String fileContent = await rootBundle.loadString('assets/words.txt');
-      
+
       // 2. On coupe à chaque saut de ligne pour faire une liste
       // LineSplitter gère les différences Windows/Mac (\r\n vs \n)
       _words = const LineSplitter().convert(fileContent);
-      
+
       // 3. On filtre pour être sûr (majuscules, pas d'espaces, 5-6 lettres)
       _words = _words
           .map((w) => w.trim().toUpperCase())
@@ -26,7 +26,7 @@ class WordService {
     } catch (e) {
       print("Erreur chargement dictionnaire : $e");
       // Fallback au cas où le fichier plante
-      _words = ["ERROR", "FLUTTER"]; 
+      _words = ["ERROR", "FLUTTER"];
     }
   }
 
@@ -52,5 +52,10 @@ class WordService {
 
   static bool isValidWord(String word) {
     return _words.contains(word.toUpperCase());
+  }
+
+  // Méthode uniquement pour les tests
+  static void testSetWords(List<String> words) {
+    _words = words;
   }
 }

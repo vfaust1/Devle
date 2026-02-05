@@ -36,7 +36,7 @@ class _StatsScreenState extends State<StatsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Statistics')),
-      body: isLoading 
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Center(
               child: Column(
@@ -47,13 +47,16 @@ class _StatsScreenState extends State<StatsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildStatItem("Played", played),
-                      _buildStatItem("Win %", played == 0 ? 0 : (won / played * 100).toInt()),
+                      _buildStatItem(
+                        "Win %",
+                        played == 0 ? 0 : (won / played * 100).toInt(),
+                      ),
                       _buildStatItem("Streak", streak),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 40),
-                  
+
                   // Petit bouton retour
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),

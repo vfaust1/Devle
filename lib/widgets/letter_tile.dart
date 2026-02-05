@@ -6,7 +6,7 @@ class LetterTile extends StatelessWidget {
   final double size;
 
   const LetterTile({
-    super.key, 
+    super.key,
     required this.letter,
     this.backgroundColor = Colors.transparent,
     this.size = 60,
@@ -32,10 +32,10 @@ class LetterTile extends StatelessWidget {
           fontSize: size * 0.5,
           fontWeight: FontWeight.bold,
           color: backgroundColor != Colors.transparent
-                ? Colors.white
-                : Theme.of(context).brightness == Brightness.dark 
-                    ? Colors.white 
-                    : Colors.black,
+              ? Colors.white
+              : Theme.of(context).brightness == Brightness.dark
+              ? Colors.white
+              : Colors.black,
         ),
       ),
     );

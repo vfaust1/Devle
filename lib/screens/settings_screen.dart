@@ -19,33 +19,40 @@ class SettingsScreen extends StatelessWidget {
                   color: Colors.amber.withOpacity(0.2), // Fond doré
                   child: ListTile(
                     leading: const Icon(Icons.star, color: Colors.orange),
-                    title: const Text('Go Premium', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange)),
+                    title: const Text(
+                      'Go Premium',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                      ),
+                    ),
                     subtitle: const Text('Remove limits & support the dev'),
                     trailing: ElevatedButton(
                       onPressed: () {
-                         // SIMULATION D'ACHAT
-                         premiumService.buyPremium();
-                         
-                         ScaffoldMessenger.of(context).showSnackBar(
-                           const SnackBar(content: Text('Welcome to Premium! 🌟')),
-                         );
+                        // SIMULATION D'ACHAT
+                        premiumService.buyPremium();
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Welcome to Premium! 🌟'),
+                          ),
+                        );
                       },
                       child: const Text('Buy'),
                     ),
                   ),
                 ),
                 const Divider(),
-              ]
-              else ...[
+              ] else ...[
                 Container(
-                   color: Colors.green.withOpacity(0.1),
-                   child: const ListTile(
-                     leading: Icon(Icons.verified, color: Colors.green),
-                     title: Text('Premium Unlocked'),
-                     subtitle: Text('Thank you for your support! ❤️'),
-                   ),
-                 ),
-                 const Divider(),
+                  color: Colors.green.withOpacity(0.1),
+                  child: const ListTile(
+                    leading: Icon(Icons.verified, color: Colors.green),
+                    title: Text('Premium Unlocked'),
+                    subtitle: Text('Thank you for your support! ❤️'),
+                  ),
+                ),
+                const Divider(),
               ],
 
               // Section Dark Mode
@@ -70,7 +77,7 @@ class SettingsScreen extends StatelessWidget {
             ],
           ),
         );
-      }
+      },
     );
   }
 }

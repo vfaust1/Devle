@@ -24,15 +24,17 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
   String currentGuess = "";
   int currentRow = 0;
   List<String> guesses = [];
-  
+
   String targetWord = "";
   int _revealingIndex = -1;
 
   final FocusNode _focusNode = FocusNode();
 
   // Une clé unique pour chaque ligne (6 lignes max)
-  final List<GlobalKey<ShakeWidgetState>> _shakeKeys = 
-    List.generate(6, (index) => GlobalKey<ShakeWidgetState>());
+  final List<GlobalKey<ShakeWidgetState>> _shakeKeys = List.generate(
+    6,
+    (index) => GlobalKey<ShakeWidgetState>(),
+  );
 
   @override
   void initState() {
@@ -43,9 +45,10 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     } else {
       targetWord = WordService.getRandomWord();
     }
-    print("Mode: ${widget.forcedWord != null ? 'DAILY' : 'FREE'} - Mot: $targetWord");
+    print(
+      "Mode: ${widget.forcedWord != null ? 'DAILY' : 'FREE'} - Mot: $targetWord",
+    );
   }
-
 
   void _onKeyTapped(String letter) {
     if (gameStatus != GameStatus.playing) return;
@@ -72,7 +75,10 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     if (currentGuess.length < targetWord.length) {
       _shakeKeys[currentRow].currentState?.shake();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Not enough letters!'), duration: Duration(seconds: 1)),
+        const SnackBar(
+          content: Text('Not enough letters!'),
+          duration: Duration(seconds: 1),
+        ),
       );
       return;
     }
@@ -80,7 +86,11 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     if (!WordService.isValidWord(currentGuess)) {
       _shakeKeys[currentRow].currentState?.shake();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Word not in dictionary!'), backgroundColor: Colors.red, duration: Duration(seconds: 1)),
+        const SnackBar(
+          content: Text('Word not in dictionary!'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 1),
+        ),
       );
       return;
     }
@@ -93,7 +103,9 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
 
     // 3. Boucle d'animation
     for (int i = 0; i < targetWord.length; i++) {
-      await Future.delayed(const Duration(milliseconds: 400)); // 300 ou 500 peut etre
+      await Future.delayed(
+        const Duration(milliseconds: 400),
+      ); // 300 ou 500 peut etre
       setState(() {
         _revealingIndex = i;
       });
@@ -115,8 +127,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
           StatsService.incrementFreeGame();
         }
         _showEndGameMessage(true);
-      } 
-      else if (guesses.length >= 6) {
+      } else if (guesses.length >= 6) {
         gameStatus = GameStatus.lost;
         StatsService.saveGameResult(won: false);
         if (widget.forcedWord != null) {
@@ -125,7 +136,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
           StatsService.incrementFreeGame();
         }
         _showEndGameMessage(false);
-      } 
+      }
       // Préparation du prochain essai
       else {
         currentRow++;
@@ -151,13 +162,13 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
       if (rowIndex >= guesses.length) {
         return Colors.transparent;
       }
-      
+
       if (letterIndex > _revealingIndex) {
         return Colors.transparent;
       }
     }
 
-    // 3. Calcul de la couleur 
+    // 3. Calcul de la couleur
     if (rowIndex >= guesses.length) return Colors.transparent;
 
     String guess = guesses[rowIndex];
@@ -170,7 +181,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     } else if (targetWord.contains(letter)) {
       return Colors.amber;
     } else {
-      return Colors.grey.shade800; 
+      return Colors.grey.shade800;
     }
   }
 
@@ -182,17 +193,23 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
         return AlertDialog(
           title: Text(won ? 'You Won!' : 'Game Over!'),
           content: Column(
-            mainAxisSize: MainAxisSize.min, // Important pour ne pas prendre tout l'écran
+            mainAxisSize:
+                MainAxisSize.min, // Important pour ne pas prendre tout l'écran
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(won
-                  ? 'Congratulations! You found "$targetWord" in ${guesses.length} tries.'
-                  : 'The word was "$targetWord". Better luck next time!'),
+              Text(
+                won
+                    ? 'Congratulations! You found "$targetWord" in ${guesses.length} tries.'
+                    : 'The word was "$targetWord". Better luck next time!',
+              ),
               const SizedBox(height: 20),
-              
-              const Text("Share your score:", style: TextStyle(fontWeight: FontWeight.bold)),
+
+              const Text(
+                "Share your score:",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 10),
-              
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -204,11 +221,13 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                   ),
                   onPressed: () {
                     String textToShare = _generateShareText();
-                    
+
                     Clipboard.setData(ClipboardData(text: textToShare));
-                    
+
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Score copied! Paste it anywhere.')),
+                      const SnackBar(
+                        content: Text('Score copied! Paste it anywhere.'),
+                      ),
                     );
                   },
                 ),
@@ -223,7 +242,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
               },
               child: const Text('Menu'),
             ),
-             TextButton(
+            TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -231,13 +250,13 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
             ),
           ],
         );
-      }
+      },
     );
   }
 
   String _generateShareText() {
     StringBuffer buffer = StringBuffer();
-    
+
     buffer.writeln('Devle ${DateTime.now().day}/${DateTime.now().month}');
     buffer.writeln('${guesses.length}/6');
     buffer.writeln();
@@ -245,13 +264,13 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
     for (String guess in guesses) {
       for (int i = 0; i < guess.length; i++) {
         String letter = guess[i];
-        
+
         if (letter == targetWord[i]) {
           buffer.write('🟩');
         } else if (targetWord.contains(letter)) {
           buffer.write('🟨');
         } else {
-          buffer.write('⬛'); 
+          buffer.write('⬛');
         }
       }
       buffer.writeln();
@@ -279,27 +298,22 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
       autofocus: true,
       onKeyEvent: (KeyEvent event) {
         if (event is KeyDownEvent) {
-
           // CAS 1 : Touche Entrée
           if (event.logicalKey == LogicalKeyboardKey.enter) {
             _onEnter();
           }
-
           // CAS 2 : Touche Backspace / Delete
-          else if (event.logicalKey == LogicalKeyboardKey.backspace || 
-                   event.logicalKey == LogicalKeyboardKey.delete) {
-
+          else if (event.logicalKey == LogicalKeyboardKey.backspace ||
+              event.logicalKey == LogicalKeyboardKey.delete) {
             _onBackspace();
           }
-
           // CAS 3 : Lettres A-Z
           else if (event.character != null &&
-                   event.character!.length == 1 &&
-                   RegExp(r'^[a-zA-Z]$').hasMatch(event.character!)) {
-
+              event.character!.length == 1 &&
+              RegExp(r'^[a-zA-Z]$').hasMatch(event.character!)) {
             _onKeyTapped(event.character!.toUpperCase());
           }
-        } 
+        }
       },
 
       child: Scaffold(
@@ -317,22 +331,26 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                       key: _shakeKeys[rowIndex],
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(targetWord.length, (letterIndex) {
+                        children: List.generate(targetWord.length, (
+                          letterIndex,
+                        ) {
                           String letterToShow = "";
 
                           if (rowIndex < currentRow) {
                             letterToShow = guesses[rowIndex][letterIndex];
-                          } 
-                          else if (rowIndex == currentRow) {
+                          } else if (rowIndex == currentRow) {
                             if (letterIndex < currentGuess.length) {
                               letterToShow = currentGuess[letterIndex];
                             }
-                          } 
+                          }
 
-                          Color tileColor = _getTileColor(rowIndex, letterIndex);
+                          Color tileColor = _getTileColor(
+                            rowIndex,
+                            letterIndex,
+                          );
 
                           return FlipLetterTile(
-                            letter: letterToShow, 
+                            letter: letterToShow,
                             backgroundColor: tileColor,
                             size: tileSize,
                           );
@@ -376,7 +394,7 @@ class _DailyWordScreenState extends State<DailyWordScreen> {
                       width: keyWidth * 1.5,
                       onTap: _onEnter,
                     ),
-                    
+
                     ...row3.split('').map((e) {
                       return KeyButton(
                         letter: e,

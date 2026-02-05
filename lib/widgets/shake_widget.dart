@@ -11,7 +11,7 @@ class ShakeWidget extends StatefulWidget {
     super.key,
     required this.child,
     this.shakeOffset = 10.0, // Distance du tremblement
-    this.count = 3,          // Nombre d'allers-retours
+    this.count = 3, // Nombre d'allers-retours
     this.duration = const Duration(milliseconds: 400),
   });
 
@@ -19,7 +19,8 @@ class ShakeWidget extends StatefulWidget {
   ShakeWidgetState createState() => ShakeWidgetState();
 }
 
-class ShakeWidgetState extends State<ShakeWidget> with SingleTickerProviderStateMixin {
+class ShakeWidgetState extends State<ShakeWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -27,7 +28,7 @@ class ShakeWidgetState extends State<ShakeWidget> with SingleTickerProviderState
     super.initState();
     // Le contrôleur d'animation
     _controller = AnimationController(vsync: this, duration: widget.duration);
-    
+
     // On ajoute un écouteur pour que l'animation s'arrête proprement
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -56,7 +57,7 @@ class ShakeWidgetState extends State<ShakeWidget> with SingleTickerProviderState
       builder: (context, child) {
         // La magie mathématique pour faire un mouvement de sinus (gauche-droite)
         final sineValue = sin(widget.count * 2 * pi * _controller.value);
-        
+
         return Transform.translate(
           offset: Offset(sineValue * widget.shakeOffset, 0),
           child: child,

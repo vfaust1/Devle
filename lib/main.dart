@@ -6,7 +6,7 @@ import 'services/premium_service.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 final themeService = ThemeService();
-final premiumService = PremiumService(); 
+final premiumService = PremiumService();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +31,9 @@ class DevleApp extends StatelessWidget {
         return MaterialApp(
           title: 'Devle',
           debugShowCheckedModeBanner: false,
-          
+
           themeMode: themeService.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          
+
           theme: ThemeData(
             brightness: Brightness.light,
             primarySwatch: Colors.green,
@@ -41,20 +41,18 @@ class DevleApp extends StatelessWidget {
             useMaterial3: true,
             appBarTheme: const AppBarTheme(
               backgroundColor: Colors.green,
-              foregroundColor: Colors.white
+              foregroundColor: Colors.white,
             ),
           ),
-          
+
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             primarySwatch: Colors.green,
-            scaffoldBackgroundColor: Colors.black, 
+            scaffoldBackgroundColor: Colors.black,
             useMaterial3: true,
-             appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.grey,
-            ),
+            appBarTheme: const AppBarTheme(backgroundColor: Colors.grey),
           ),
-          
+
           home: const HomeScreen(),
         );
       },

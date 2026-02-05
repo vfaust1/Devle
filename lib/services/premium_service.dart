@@ -21,7 +21,7 @@ class PremiumService extends ChangeNotifier {
     await prefs.setBool(_keyPremium, true);
     notifyListeners();
   }
-  
+
   // Pour les tests : Annuler l'achat
   Future<void> clearPremium() async {
     final prefs = await SharedPreferences.getInstance();

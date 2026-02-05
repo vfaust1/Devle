@@ -6,8 +6,8 @@ class KeyButton extends StatelessWidget {
   final double width;
 
   const KeyButton({
-    super.key, 
-    required this.letter, 
+    super.key,
+    required this.letter,
     required this.onTap,
     this.width = 40,
   });
@@ -25,7 +25,9 @@ class KeyButton extends StatelessWidget {
         margin: const EdgeInsets.all(1),
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.transparent : Colors.grey[200],
-          border: Border.all(color: isDarkMode ? Colors.grey : Colors.grey.shade400,),
+          border: Border.all(
+            color: isDarkMode ? Colors.grey : Colors.grey.shade400,
+          ),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(

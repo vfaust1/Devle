@@ -5,7 +5,7 @@ class AdService {
   // On définit les IDs en dur ou on détecte la plateforme proprement sans dart:io
   String get _rewardedAdUnitId {
     if (kIsWeb) return ''; // Pas de pub sur le web pour l'instant
-    
+
     // Astuce : on utilise defaultTargetPlatform au lieu de Platform.isAndroid
     if (defaultTargetPlatform == TargetPlatform.android) {
       return 'ca-app-pub-3940256099942544/5224354917'; // Test Android
@@ -19,7 +19,7 @@ class AdService {
 
   void loadRewardedAd() {
     // SÉCURITÉ : Si on est sur le Web, on arrête tout de suite
-    if (kIsWeb) return; 
+    if (kIsWeb) return;
 
     RewardedAd.load(
       adUnitId: _rewardedAdUnitId,
@@ -48,7 +48,7 @@ class AdService {
     if (_rewardedAd == null) {
       print('Warning: The ad was not ready yet.');
       // En cas d'échec de chargement, on donne quand même la récompense pour ne pas frustrer
-      onRewardEarned(); 
+      onRewardEarned();
       loadRewardedAd();
       return;
     }
@@ -71,7 +71,7 @@ class AdService {
         onRewardEarned();
       },
     );
-    
+
     _rewardedAd = null;
   }
 }

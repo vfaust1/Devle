@@ -42,16 +42,16 @@ class StatsService {
   static Future<bool> hasPlayedDaily() async {
     final prefs = await SharedPreferences.getInstance();
     final lastDate = prefs.getString(_keyLastDailyDate);
-    
+
     final today = DateTime.now().toIso8601String().split('T')[0];
-    
+
     return lastDate == today;
   }
 
   static Future<void> markDailyPlayed() async {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toIso8601String().split('T')[0];
-    
+
     await prefs.setString(_keyLastDailyDate, today);
   }
 
@@ -61,7 +61,7 @@ class StatsService {
     final today = DateTime.now().toIso8601String().split('T')[0];
 
     if (lastDate != today) {
-      return 0; 
+      return 0;
     }
 
     return prefs.getInt(_keyFreeCount) ?? 0;
@@ -70,9 +70,9 @@ class StatsService {
   static Future<void> incrementFreeGame() async {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now().toIso8601String().split('T')[0];
-    
+
     int currentCount = await getFreeGamesPlayedToday();
-    
+
     await prefs.setString(_keyLastFreeDate, today);
     await prefs.setInt(_keyFreeCount, currentCount + 1);
   }
@@ -80,7 +80,7 @@ class StatsService {
   static Future<void> rewardExtraGame() async {
     final prefs = await SharedPreferences.getInstance();
     int currentCount = await getFreeGamesPlayedToday();
-    
+
     if (currentCount > 0) {
       await prefs.setInt(_keyFreeCount, currentCount - 1);
     }
